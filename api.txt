@@ -1,0 +1,4 @@
+curl --request POST --url https://chatgpt-api8.p.rapidapi.com/ --header "X-RapidAPI-Host: chatgpt-api8.p.rapidapi.com" --header "X-RapidAPI-Key: 231f2e066dmsh5b35d61e8d023c0p1c59c5jsna8ff86be4833" --header "content-type: application/json" --data "[ { \"content\": \"Hello! I'm an AI assistant bot based on ChatGPT 3. How may I help you?\", \"role\": \"system\" }, { \"content\": \"who won the super bowl 2019?\", \"role\": \"user\" } ]"
+
+curl --request POST --url https://chatgpt-api8.p.rapidapi.com/ --header "X-RapidAPI-Host: chatgpt-api8.p.rapidapi.com" --header "X-RapidAPI-Key: 750e56b799msh648a4366b6dafc5p1c66f2jsn249b54bab349" --header "content-type: application/json" --data "[ { \"content\": \"Hello! I'm an AI assistant bot based on ChatGPT 3. How may I help you?\", \"role\": \"system\" }, { \"content\": \"who won the super bowl 2019?\", \"role\": \"user\" } ]"
+
