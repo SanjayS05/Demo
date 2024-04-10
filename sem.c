@@ -355,3 +355,66 @@ int main() {
 
     return 0;
 }
+
+//Cold-coffee
+
+#include <stdio.h>
+#include <pthread.h>
+#include <semaphore.h>
+
+#define TOTAL_CUSTOMERS 10
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+sem_t sequencer, barrista;
+
+int event_count = 0;
+int ticket = 0;
+
+void* barrista_thread(void* arg) {
+    while (1) {
+        sem_wait(&barrista);
+        pthread_mutex_lock(&mutex);
+        printf("Barrista serving customer with ticket: %d\\", event_count);
+        event_count++;
+        pthread_mutex_unlock(&mutex);
+        sem_post(&sequencer);
+    }
+    return NULL;
+}
+
+void* customer_thread(void* arg) {
+    int customer_id = *((int*)arg);
+    sem_wait(&sequencer);
+    pthread_mutex_lock(&mutex);
+    printf("Customer %d with ticket %d placing order\\", customer_id, ticket);
+    ticket++;
+    pthread_mutex_unlock(&mutex);
+    sem_post(&barrista);
+    return NULL;
+}
+
+int main() {
+    pthread_t barrista_tid, customer_tid[TOTAL_CUSTOMERS];
+    
+    sem_init(&sequencer, 0, 10);
+    sem_init(&barrista, 0, 0);
+
+    pthread_create(&barrista_tid, NULL, barrista_thread, NULL);
+
+    int customer_ids[TOTAL_CUSTOMERS];
+    for (int i = 0; i < TOTAL_CUSTOMERS; i++) {
+        customer_ids[i] = i;
+        pthread_create(&customer_tid[i], NULL, customer_thread, &customer_ids[i]);
+    }
+
+    for (int i = 0; i < TOTAL_CUSTOMERS; i++) {
+        pthread_join(customer_tid[i], NULL);
+    }
+    //Cancel barrista thread after all customers are served
+    pthread_cancel(barrista_tid);
+
+    sem_destroy(&sequencer);
+    sem_destroy(&barrista);
+
+    return 0;
+}
